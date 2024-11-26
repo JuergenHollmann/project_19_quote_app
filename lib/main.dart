@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const MainApp());
@@ -159,16 +159,29 @@ class GetUriFromAPI extends StatelessWidget {
 
       /*--------------------------------- 541-24 ---*/
       onPressed: () async {
+        /*--------------------------------- aus GitHub ---*/
+        // const url = new URL("https://api.api-ninjas.com/v1/geocoding");
+        // url.searchParams.set("city", city);
+        // const response = await fetch(url, {
+        //   headers: {"X-API-Key": "l+CE1RR3ZW0yIo6dhwc0HQ==aY0laKm7ph0Yud7n"}
+        // });
+        /*--------------------------------- GitHub - ENDE ---*/
+
+        // log("--------------------------------------------------------------------------------------------------------");
         // Für die HTTP-Server-Anfrage wird das --> import "package:http/http.dart;" <-- verwendet.
 
         // Der "uriString" ist der Link zum Server.
         const uriString =
-            //"https://api.api-ninjas.com/v1/quotes?category=birthday"; // missing API-Key!
-            "https://dummyjson.com/products"; // nur zum Testen - funzt OHNE API-Key
+            "https://api.api-ninjas.com/v1/quotes?category=birthday";
+
+        // "https://dummyjson.com/products"; // nur zum Testen - funzt OHNE API-Key
 
         // Die Anfrage an den Server wird mit "await get(Uri.parse(uriString));" gestellt.
         // Als Antwort kommt die "reponse" zurück.
-        final response = await get(Uri.parse(uriString));
+        final response = await http.get(Uri.parse(uriString),
+
+            // Bei "api.api-ninjas.com" benötigt man noch einen "X-API-Key" - dieser wird hier hinzugefügt:
+            headers: {"X-API-Key": "l+CE1RR3ZW0yIo6dhwc0HQ==aY0laKm7ph0Yud7n"});
 
         /*--------------------------------- 541-25 ---*/
         List<String> productTitles = [];
@@ -177,32 +190,31 @@ class GetUriFromAPI extends StatelessWidget {
         // Die Daten sind im "response.body" als JSON-String, der umgewandelt werden muss.
         // Dafür wird die Funktion "jsonDecode()"" verwendet.
         final productData = json.decode(response.body);
+        // Der Rückgabewert ist entweder eine Map oder eine List oder eine verschachtelte Version davon (je nachdem).
         log("0083 $productData");
 
-        // Der Rückgabewert ist entweder eine Map oder eine List oder eine verschachtelte Version davon (je nachdem).
-        final productsJsonList = productData['products'];
+        // Eine Liste wird hier nicht benötigt, da immer nur ein EINZIGES Zitat zurückgegeben wird.
+        // final productsJsonList = productData[0];
         //log("0087 $productsJsonList");
 
-        // Durch die zurückgegebene Liste iterieren.
-        for (final product in productsJsonList) {
-          // In jedem Durchgang wird das JSON-Ergebnis weiter aufgebaut.
-          productTitles.add(product["title"]);
-          log("0093 $productTitles");
-          /*--------------------------------- *** ---*/
-        }
+        // // Durch die zurückgegebene Liste iterieren - wird hier nicht benötigt, da immer nur ein EINZIGES Zitat zurückgegeben wird.
+        // for (final product in productsJsonList) {
+        //   // In jedem Durchgang wird das JSON-Ergebnis weiter aufgebaut.
+        //   productTitles.add(product["quote"]);
+        //   log("0093 $productTitles");
+        // }
         log("--------------------------------------------------------------------------------------------------------");
-        log("0097 - uriString:        $uriString");
+        log("0097 - uriString:           $uriString");
         log("--------------------------------------------------------------------------------------------------------");
-        log("0098 - response:         ${response.body}");
-        log("--------------------------------------------------------------------------------------------------------");
-        log("0099 - productTitles:    $productTitles");
-        log("--------------------------------------------------------------------------------------------------------");
-        log("0100 - productData:      $productData");
-        log("--------------------------------------------------------------------------------------------------------");
-        log("0101 - productsJsonList: $productsJsonList");
-        log("--------------------------------------------------------------------------------------------------------");
+        // log("0098 - response:         ${response.body}");
+        // log("--------------------------------------------------------------------------------------------------------");
+        // log("0099 - productTitles:    $productTitles");
+        // log("--------------------------------------------------------------------------------------------------------");
+        // log("0100 - productData:      $productData");
+        // log("--------------------------------------------------------------------------------------------------------");
+        // log("0101 - productsJsonList: $productsJsonList");
+        // log("--------------------------------------------------------------------------------------------------------");
       },
-      /*--------------------------------- *** ---*/
       child: const Text(
         "Neues Zitat zeigen",
         style: TextStyle(
